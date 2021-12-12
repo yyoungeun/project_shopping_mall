@@ -57,9 +57,19 @@ router.post("/products", (req, res) => {
   let limit = req.body.limit ? parseInt(req.body.limit) : 50;
   let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
+  let findArgs = {};
+
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      findArgs[key] = req.body.filters[key];
+    }
+  }
+
+  console.log("findArgs", findArgs);
+
   // 모든 정보 가져오기 : find()
   // 조건이 있을 경우 : find({object 형식})
-  Product.find()
+  Product.find(findArgs)
     .populate("writer") // writer에 대한 모든 정보 가져오기
     .skip(skip)
     .limit(limit)

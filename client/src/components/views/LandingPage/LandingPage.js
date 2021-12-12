@@ -11,6 +11,10 @@ function LandingPage() {
   const [Skip, setSkip] = useState(0);
   const [Limit, setLimit] = useState(8);
   const [PostSize, setPostSize] = useState(0);
+  const [Filters, setFilters] = useState({
+    continents: [],
+    price: [],
+  });
 
   useEffect(() => {
     //8개만 가져올 수 있도록
@@ -55,7 +59,7 @@ function LandingPage() {
   };
 
   const renderCards = Products.map((product, index) => {
-    console.log("product", product);
+    //console.log("product", product);
     return (
       <Col lg={6} md={8} xs={24} key={index}>
         <Card cover={<ImageSlider images={product.image} />}>
@@ -65,6 +69,22 @@ function LandingPage() {
     );
   });
 
+  const showFilterdResults = (filters) => {
+    let body = {
+      skip: 0,
+      limit: Limit,
+      filters: filters,
+    };
+    getProducts(body);
+    setSkip(0);
+  };
+  const handleFilters = (filters, category) => {
+    const newFilters = { ...Filters };
+
+    newFilters[category] = filters;
+
+    showFilterdResults(newFilters);
+  };
   return (
     <div style={{ width: "75%", margin: "3rem auto" }}>
       <div style={{ textAlign: "center" }}>
@@ -74,7 +94,10 @@ function LandingPage() {
       </div>
       {/* Filter */}
       {/* CheckBox */}
-      <CheckBox list={continents} />
+      <CheckBox
+        list={continents}
+        handleFilters={(filters) => handleFilters(filters, "continents")}
+      />
 
       {/* RadioBox*/}
 
