@@ -35,11 +35,13 @@ function CheckBox(props) {
       </React.Fragment>
     ));
   return (
-    <Collapse defaultActiveKey={["1"]}>
-      <Panel header="This is panel header with arrow icon" key="1">
-        {renderCheckboxLists()}
-      </Panel>
-    </Collapse>
+    <div>
+      <Collapse defaultActiveKey={["1"]}>
+        <Panel header="This is panel header with arrow icon" key="1">
+          {renderCheckboxLists()}
+        </Panel>
+      </Collapse>
+    </div>
   );
 }
 

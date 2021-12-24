@@ -40,6 +40,17 @@ const productSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+productSchema.index(
+  {
+    name: "text",
+    description: "text",
+  },
+  {
+    // control search result with weight
+    weights: 5, // name중요
+    description: 1, // default 1(생략 가능)
+  }
+);
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = { Product };

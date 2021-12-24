@@ -4,7 +4,9 @@ import { Icon, Col, Card, Row } from "antd";
 import Meta from "antd/lib/card/Meta";
 import ImageSlider from "../../utils/ImageSlider";
 import CheckBox from "./Sections/CheckBox";
-import { continents } from "./Sections/Datas";
+import { continents, price } from "./Sections/Datas";
+import RadioBox from "./Sections/RadioBox";
+import SearchFeature from "./Sections/SearchFeature";
 
 function LandingPage() {
   const [Products, setProducts] = useState([]);
@@ -15,6 +17,7 @@ function LandingPage() {
     continents: [],
     price: [],
   });
+  const [SearchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     //8개만 가져올 수 있도록
@@ -78,12 +81,46 @@ function LandingPage() {
     getProducts(body);
     setSkip(0);
   };
+
+  const handlePrice = (value) => {
+    const data = price;
+    let array = [];
+
+    for (let key in data) {
+      if (data[key]._id === parseInt(value)) {
+        //string 대비
+        array = data[key].array;
+      }
+    }
+
+    return array;
+  };
   const handleFilters = (filters, category) => {
     const newFilters = { ...Filters };
 
     newFilters[category] = filters;
 
+    console.log("filters", filters);
+
+    if (category === "price") {
+      let priceValues = handlePrice(filters);
+      newFilters[category] = priceValues;
+    }
+
     showFilterdResults(newFilters);
+    setFilters(newFilters);
+  };
+
+  const updateSearchTerm = (newSearchTerm) => {
+    let body = {
+      skip: 0,
+      limit: Limit,
+      filters: Filters,
+      searchTerm: newSearchTerm,
+    };
+    setSkip(0);
+    setSearchTerm(newSearchTerm);
+    getProducts(body);
   };
   return (
     <div style={{ width: "75%", margin: "3rem auto" }}>
@@ -93,15 +130,34 @@ function LandingPage() {
         </h2>
       </div>
       {/* Filter */}
-      {/* CheckBox */}
-      <CheckBox
-        list={continents}
-        handleFilters={(filters) => handleFilters(filters, "continents")}
-      />
+      <Row gutter={[16, 16]}>
+        <Col lg={12} xs={24}>
+          {/* CheckBox */}
+          <CheckBox
+            list={continents}
+            handleFilters={(filters) => handleFilters(filters, "continents")}
+          />
+        </Col>
 
-      {/* RadioBox*/}
+        <Col lg={12} xs={24}>
+          {/* RadioBox*/}
+          <RadioBox
+            list={price}
+            handleFilters={(filters) => handleFilters(filters, "price")}
+          />
+        </Col>
+      </Row>
 
       {/* Search */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          margin: "1rem auto",
+        }}
+      >
+        <SearchFeature refreshFunction={updateSearchTerm} />
+      </div>
       {/* Cards */}
       {/* 여백 : guttwe */}
       <Row gutter={[16, 16]}>{renderCards}</Row>
