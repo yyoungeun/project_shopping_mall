@@ -31,13 +31,13 @@ function CheckBox(props) {
           onChange={() => handleToggle(value._id)}
           checked={Checked.indexOf(value._id) === -1 ? false : true}
         />
-        <span>{value.name}</span>
+        <span>{value.name} </span>
       </React.Fragment>
     ));
   return (
     <div>
       <Collapse defaultActiveKey={["1"]}>
-        <Panel header="This is panel header with arrow icon" key="1">
+        <Panel header="Continents" key="0">
           {renderCheckboxLists()}
         </Panel>
       </Collapse>

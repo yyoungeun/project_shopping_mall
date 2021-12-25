@@ -107,4 +107,34 @@ router.post("/products", (req, res) => {
   }
 });
 
+// id=123123123, 34322432432, 545454455 type = array
+
+//==================================================
+//             DetailProductPage, CartPage
+//==================================================
+
+router.get("/products_by_id", (req, res) => {
+  let type = req.query.type;
+  let productIds = req.query.id;
+
+  if (type === "array") {
+    // id=123123123, 34322432432, 545454455
+    //                 ↓
+    // => productIds = ['123123123', '34322432432', '545454455']
+    let ids = req.query.id.split(",");
+    productIds = ids.map((item) => {
+      return item;
+    });
+  }
+
+  // productId를 이용해서 DB에서 productId와 같은 상품의 정보를 가져온다.
+
+  Product.find({ _id: { $in: productIds } })
+    .populate("writer")
+    .exec((err, product) => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).send(product);
+    });
+});
+
 module.exports = router;
